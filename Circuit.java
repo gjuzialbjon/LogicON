@@ -1,0 +1,293 @@
+import java.util.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+
+public class Circuit extends JFrame
+{
+  //variables
+  CircuitModel cm;
+  PadDraw drawPad;
+  
+  //constructor
+  public Circuit(){  
+    setTitle("LOGIC ON");
+    ProjectMenu p = new ProjectMenu();
+    add(p, BorderLayout.NORTH);
+    
+    RightClick rc = new RightClick();
+    PopupListener pl = new PopupListener(rc);
+    //ComponentPanel cp = new ComponentPanel();
+    setJMenuBar(p.createMenu());
+    
+    //Creates a frame with a title of "Paint it"
+    
+    Container content = getContentPane();
+    //Creates a new container
+    content.setLayout(new BorderLayout());
+    //sets the layout
+    //add right click mouse
+    content.addMouseListener(pl);
+    cm = new CircuitModel();
+    p.addCircuit(cm);
+    drawPad = new PadDraw(cm);
+    p.addDrawPad(drawPad);
+    //creates a new padDraw, which is pretty much the paint program
+    
+    content.add(drawPad, BorderLayout.CENTER);
+    //content.add(cp, BorderLayout.WEST);
+    //sets the padDraw in the center
+    
+    //for the task bar
+    final JTextArea taskbar = new JTextArea();
+    
+    taskbar.setVisible(true);
+    taskbar.setBackground(Color.lightGray);
+    taskbar.setEditable(false);
+    
+    //adding the taskbar to the bottom-part
+    content.add(taskbar,BorderLayout.SOUTH);
+    
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridLayout(0,2));
+    //creates a JPanel
+    panel.setPreferredSize(new Dimension(300, 900));
+    panel.setMinimumSize(new Dimension(300, 900));
+    panel.setMaximumSize(new Dimension(300, 900));
+    //This sets the size of the pane
+    
+    
+    //CLEAR BUTTON
+    JButton clear = new JButton("CLEAR");
+    clear.addActionListener(new ActionListener()
+                              {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.clear();
+        taskbar.setText("Everything new");
+      }
+    });
+    
+    //WIRE BUTTON
+    JButton wire = new JButton(new ImageIcon("img/wire.jpg"));
+    wire.addActionListener(new ActionListener()
+                             {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.wire();
+        taskbar.setText("Connect output gates with input gates");
+      }
+    }); 
+    
+    //SWITCH OFF BUTTON
+    JButton switchOff = new JButton(new ImageIcon("img/switchOff.png"));
+    switchOff.addActionListener(new ActionListener()
+                                  {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addSwitchOff();
+        taskbar.setText("Click to add a switchOff ");
+      }
+    });
+    
+    //SWITCH ON BUTTON
+    JButton clockOff = new JButton(new ImageIcon("img/clockOff.png"));
+    clockOff.addActionListener(new ActionListener()
+                                 {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addClock();
+        taskbar.setText("Click to add a clock ");
+      }
+    });
+    
+    //HIGH CONSTANT BUTTON
+    JButton highConstant = new JButton(new ImageIcon("img/highConstant.png"));
+    highConstant.addActionListener(new ActionListener()
+                                     {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addHighConstant();
+        taskbar.setText("Click to add High Constants.");
+      }
+    });
+    
+    //LOW CONSTANT BUTTON
+    JButton lowConstant = new JButton(new ImageIcon("img/lowConstant.png"));
+    lowConstant.addActionListener(new ActionListener()
+                                    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addLowConstant();
+        taskbar.setText("Click to add an LowConstant");
+      }
+    });
+    
+    
+    //AND BUTTON
+    JButton and = new JButton(new ImageIcon("img/and.png"));
+    and.addActionListener(new ActionListener()
+                            {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addAnd();
+        taskbar.setText("Click to add an AND gate");
+      }
+    });
+    
+    //NOT BUTTON
+    JButton not = new JButton(new ImageIcon("img/not.png"));
+    not.addActionListener(new ActionListener()
+                            {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addNot();
+        taskbar.setText("Click to add an NOT gate");
+      }
+    });
+    
+    
+    //OR BUTTON
+    JButton or = new JButton(new ImageIcon("img/or.png"));
+    or.addActionListener(new ActionListener()
+                           {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addOr();
+        taskbar.setText("Click to add an OR gate");
+      }
+    });
+    
+    //BUFFER BUTTON
+    JButton buffer = new JButton(new ImageIcon("img/buffer.png"));
+    buffer.addActionListener(new ActionListener()
+                               {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addBuffer();
+        taskbar.setText("Click to add a buffer");
+      }
+    });
+    
+    //NAND BUTTON
+    JButton nand = new JButton(new ImageIcon("img/nand.png"));
+    nand.addActionListener(new ActionListener()
+                             {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addNand();
+        taskbar.setText("Click to add a NAND gate");
+      }
+    });
+    
+    
+    //XNOR BUTTON
+    JButton xnor = new JButton(new ImageIcon("img/xnor.png"));
+    xnor.addActionListener(new ActionListener()
+                             {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addXnor();
+        taskbar.setText("Click to add a XNOR gate");     
+      }
+    });
+    
+    //XOR BUTTON
+    JButton xor = new JButton(new ImageIcon("img/xor.png"));
+    xor.addActionListener(new ActionListener()
+                            {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addXor();
+        taskbar.setText("Click to add a XOR gate");   
+      }
+    });
+    
+    //TRISTATE BUTTON
+    JButton tristate = new JButton(new ImageIcon("img/tristate.png"));
+    tristate.addActionListener(new ActionListener()
+                                 {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addTristate();
+        taskbar.setText("Click to add a TRISTATE gate"); 
+      }
+    });
+    
+    
+    //LIGHT OF BUTTON
+    JButton lightOff = new JButton(new ImageIcon("img/lightOff.png"));
+    lightOff.addActionListener(new ActionListener()
+                                 {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        drawPad.addLightOff();
+        taskbar.setText("Click to add a light"); 
+      }
+    });
+    
+    //Add the buttons to the panel in th west
+    panel.add(clear);
+    panel.add(wire); 
+    panel.add(switchOff);
+    panel.add(clockOff);
+    panel.add(highConstant); 
+    panel.add(lowConstant);
+    panel.add(and);
+    panel.add(not);
+    panel.add(or);
+    panel.add(buffer);
+    panel.add(nand);
+    panel.add(xnor);
+    panel.add(xor);
+    panel.add(lightOff);
+    
+    JScrollPane scroller = new JScrollPane(panel);
+    scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scroller.setPreferredSize(new Dimension(320,900));
+    //add(scroller);
+    //adds the buttons to the panel
+    
+    content.add(scroller, BorderLayout.WEST);
+    //sets the panel to the upper portion
+    
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    
+    setSize((int)screenSize.getWidth(),(int) screenSize.getHeight());
+    //sets the size of the frame
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //makes it so you can close
+    setResizable(true);
+    //so that u can't change the dafault size
+    setVisible(true);
+    //makes it so you can see it
+
+  }
+  //get method
+    public  CircuitModel getCModel()
+    {
+      return cm;
+    }
+}
+
+ 
+
